@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Common\Src\bufferpool.cpp" />
+    <ClCompile Include="Common\Src\bufferptr.cpp" />
+    <ClCompile Include="Common\Src\CriticalSection.cpp" />
+    <ClCompile Include="Common\Src\Event.cpp" />
+    <ClCompile Include="Common\Src\FuncHelper.cpp" />
+    <ClCompile Include="Common\Src\GeneralHelper.cpp" />
+    <ClCompile Include="Common\Src\http\http_parser.c" />
+    <ClCompile Include="Common\Src\PrivateHeap.cpp" />
+    <ClCompile Include="Common\Src\RingBuffer.cpp" />
+    <ClCompile Include="Common\Src\RWLock.cpp" />
+    <ClCompile Include="Common\Src\Semaphore.cpp" />
+    <ClCompile Include="Common\Src\SysHelper.cpp" />
+    <ClCompile Include="Common\Src\Thread.cpp" />
+    <ClCompile Include="Common\Src\WaitFor.cpp" />
+    <ClCompile Include="Common\Src\zlib\adler32.c" />
+    <ClCompile Include="Common\Src\zlib\compress.c" />
+    <ClCompile Include="Common\Src\zlib\crc32.c" />
+    <ClCompile Include="Common\Src\zlib\deflate.c" />
+    <ClCompile Include="Common\Src\zlib\gzclose.c" />
+    <ClCompile Include="Common\Src\zlib\gzlib.c" />
+    <ClCompile Include="Common\Src\zlib\gzread.c" />
+    <ClCompile Include="Common\Src\zlib\gzwrite.c" />
+    <ClCompile Include="Common\Src\zlib\infback.c" />
+    <ClCompile Include="Common\Src\zlib\inffast.c" />
+    <ClCompile Include="Common\Src\zlib\inflate.c" />
+    <ClCompile Include="Common\Src\zlib\inftrees.c" />
+    <ClCompile Include="Common\Src\zlib\trees.c" />
+    <ClCompile Include="Common\Src\zlib\uncompr.c" />
+    <ClCompile Include="Common\Src\zlib\zutil.c" />
+    <ClCompile Include="Global\helper.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="socket.cpp" />
+    <ClCompile Include="src\HPSocket-SSL.cpp" />
+    <ClCompile Include="src\HPSocket.cpp" />
+    <ClCompile Include="src\HttpAgent.cpp" />
+    <ClCompile Include="src\HttpClient.cpp" />
+    <ClCompile Include="src\HttpCookie.cpp" />
+    <ClCompile Include="src\HttpHelper.cpp" />
+    <ClCompile Include="src\HttpServer.cpp" />
+    <ClCompile Include="src\MiscHelper.cpp" />
+    <ClCompile Include="src\SocketHelper.cpp" />
+    <ClCompile Include="src\SSLAgent.cpp" />
+    <ClCompile Include="src\SSLClient.cpp" />
+    <ClCompile Include="src\SSLHelper.cpp" />
+    <ClCompile Include="src\SSLServer.cpp" />
+    <ClCompile Include="src\TcpAgent.cpp" />
+    <ClCompile Include="src\TcpClient.cpp" />
+    <ClCompile Include="src\TcpPackAgent.cpp" />
+    <ClCompile Include="src\TcpPackClient.cpp" />
+    <ClCompile Include="src\TcpPackServer.cpp" />
+    <ClCompile Include="src\TcpPullAgent.cpp" />
+    <ClCompile Include="src\TcpPullClient.cpp" />
+    <ClCompile Include="src\TcpPullServer.cpp" />
+    <ClCompile Include="src\TcpServer.cpp" />
+    <ClCompile Include="src\UdpCast.cpp" />
+    <ClCompile Include="src\UdpClient.cpp" />
+    <ClCompile Include="src\UdpServer.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common\Src\bufferpool.h" />
+    <ClInclude Include="Common\Src\bufferptr.h" />
+    <ClInclude Include="Common\Src\CriticalSection.h" />
+    <ClInclude Include="Common\Src\Event.h" />
+    <ClInclude Include="Common\Src\FuncHelper.h" />
+    <ClInclude Include="Common\Src\GeneralHelper.h" />
+    <ClInclude Include="Common\Src\http\http_parser.h" />
+    <ClInclude Include="Common\Src\PrivateHeap.h" />
+    <ClInclude Include="Common\Src\RingBuffer.h" />
+    <ClInclude Include="Common\Src\RWLock.h" />
+    <ClInclude Include="Common\Src\SE.h" />
+    <ClInclude Include="Common\Src\Semaphore.h" />
+    <ClInclude Include="Common\Src\Singleton.h" />
+    <ClInclude Include="Common\Src\STLHelper.h" />
+    <ClInclude Include="Common\Src\SysHelper.h" />
+    <ClInclude Include="Common\Src\Thread.h" />
+    <ClInclude Include="Common\Src\WaitFor.h" />
+    <ClInclude Include="Common\Src\Win32Helper.h" />
+    <ClInclude Include="Common\Src\zlib\crc32.h" />
+    <ClInclude Include="Common\Src\zlib\deflate.h" />
+    <ClInclude Include="Common\Src\zlib\gzguts.h" />
+    <ClInclude Include="Common\Src\zlib\inffast.h" />
+    <ClInclude Include="Common\Src\zlib\inffixed.h" />
+    <ClInclude Include="Common\Src\zlib\inflate.h" />
+    <ClInclude Include="Common\Src\zlib\inftrees.h" />
+    <ClInclude Include="Common\Src\zlib\trees.h" />
+    <ClInclude Include="Common\Src\zlib\zconf.h" />
+    <ClInclude Include="Common\Src\zlib\zlib.h" />
+    <ClInclude Include="Common\Src\zlib\zutil.h" />
+    <ClInclude Include="Global\helper.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="src\HPSocket-SSL.h" />
+    <ClInclude Include="src\HPSocket.h" />
+    <ClInclude Include="src\HPTypeDef.h" />
+    <ClInclude Include="src\HttpAgent.h" />
+    <ClInclude Include="src\HttpClient.h" />
+    <ClInclude Include="src\HttpCookie.h" />
+    <ClInclude Include="src\HttpHelper.h" />
+    <ClInclude Include="src\HttpServer.h" />
+    <ClInclude Include="src\MiscHelper.h" />
+    <ClInclude Include="src\SocketHelper.h" />
+    <ClInclude Include="src\SocketInterface.h" />
+    <ClInclude Include="src\SSLAgent.h" />
+    <ClInclude Include="src\SSLClient.h" />
+    <ClInclude Include="src\SSLHelper.h" />
+    <ClInclude Include="src\SSLServer.h" />
+    <ClInclude Include="src\TcpAgent.h" />
+    <ClInclude Include="src\TcpClient.h" />
+    <ClInclude Include="src\TcpPackAgent.h" />
+    <ClInclude Include="src\TcpPackClient.h" />
+    <ClInclude Include="src\TcpPackServer.h" />
+    <ClInclude Include="src\TcpPullAgent.h" />
+    <ClInclude Include="src\TcpPullClient.h" />
+    <ClInclude Include="src\TcpPullServer.h" />
+    <ClInclude Include="src\TcpServer.h" />
+    <ClInclude Include="src\UdpCast.h" />
+    <ClInclude Include="src\UdpClient.h" />
+    <ClInclude Include="src\UdpServer.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9749165D-C0DB-4314-8F14-258C00BF87E3}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>socket</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)\bin\$(Configuration)\plugin</OutDir>
+    <IntDir>$(SolutionDir)\temp\$(Configuration)\$(ProjectName)</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SOCKET_EXPORTS;_SSL_SUPPORT;_CRT_SECURE_NO_WARNINGS;_WINSOCK_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include;.;.\Common\Lib\openssl\12.0\x86\include;$(VC_IncludePath;$(WindowsSDK_IncludePath)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4100;4127;4510;4610;4996</DisableSpecificWarnings>
+      <AdditionalOptions>/wd4430 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)\lib\$(Configuration);.\Common\Lib\openssl\12.0\x86\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>v8ppD.lib;v8.lib;winmm.lib;libeay32.lib;ssleay32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SOCKET_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
