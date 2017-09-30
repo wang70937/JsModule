@@ -90,6 +90,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="curl.cpp" />
+    <ClCompile Include="DownloadFile.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DownloadFile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

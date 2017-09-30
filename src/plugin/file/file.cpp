@@ -323,8 +323,10 @@ v8::Handle<v8::Value> init(v8::Isolate* isolate)
 V8PP_PLUGIN_INIT(v8::Isolate* isolate)
 {
  	el::Loggers::addFlag(el::LoggingFlag::StrictLogFileSizeCheck);
+	el::Loggers::addFlag(el::LoggingFlag::ColoredTerminalOutput);
  	el::Configurations conf("my_log.conf");
 	el::Loggers::reconfigureAllLoggers(conf);
+	
 
 	//el::Loggers::reconfigureAllLoggers(el::ConfigurationType::Format, "%datetime %level: %msg");
 

@@ -10,13 +10,14 @@
 #include <v8pp/module.hpp>
 #include <v8pp/config.hpp>
 
-#include <string>
-using namespace std;
 
-#include <curl/curl.h>
+#include "DownloadFile.h"
+#include "v8pp/class.hpp"
+
 
 namespace curl {
 
+///////////////////////
 static long writer(void *data, int size, int nmemb, string &content)
 {
 	long sizes = size * nmemb;
@@ -106,6 +107,7 @@ size_t header_callback(const char  *ptr, size_t size, size_t nmemb, std::string 
 	return len;
 }
 
+
 int PostUrl(const char* szRefrence, const char* szUrl, const char* szPostData,
 	string& sRet, int& nLen, BOOL bPost /*= TRUE*/, BOOL bFirst /*= FALSE*/)
 {
@@ -151,7 +153,6 @@ int PostUrl(const char* szRefrence, const char* szUrl, const char* szPostData,
 			res = curl_easy_setopt(curl, CURLOPT_POSTFIELDS, szPostData);
 		}
 
-
 		string content;
 		//设置回调函数
 		res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writer);
@@ -188,6 +189,7 @@ int PostUrl(const char* szRefrence, const char* szUrl, const char* szPostData,
 
 	return res;
 }
+
 
 string post(v8::FunctionCallbackInfo<v8::Value> const& args)
 {
@@ -243,10 +245,23 @@ string post(v8::FunctionCallbackInfo<v8::Value> const& args)
 
 v8::Handle<v8::Value> init(v8::Isolate* isolate)
 {
+	v8::EscapableHandleScope scope(isolate);
+
+	//
+	v8pp::class_<CDownloadFile> CDownloadFile_class(isolate);
+	CDownloadFile_class
+		.ctor()
+		.set("start", &CDownloadFile::start)
+		.set("callback", &CDownloadFile::setCallback)
+		;
+
+	//
 	v8pp::module m(isolate);
 	m.set("post", &post);
+	m.set("download", CDownloadFile_class);
 
-	return m.new_instance();
+	//return m.new_instance();
+	return scope.Escape(m.new_instance());
 }
 
 } // namespace console

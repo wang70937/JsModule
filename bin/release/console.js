@@ -8,22 +8,6 @@
 //
 var console = require('console');
 console.log("load console.dll ok!");
-/*console.log('yo', 'baby', 4.2, null);
-
-var c2 = require('console');
-c2.log('conker 2');
-
-function pando() {
-    this.friend = 1;
-    this.masto = require('console');
-    this.whack = function() {
-        this.masto.log('truckman')
-    };
-}
-
-var c = new pando();
-c.whack();
-*/
 
 function strlen(str){
     var len = 0;
@@ -61,12 +45,12 @@ client.Start(L"127.0.0.1", 5555);*/
 //****************************************
 var curl = require('curl');
 var str = "";
-ret = curl.post("http://192.168.35.115:3000/queryMsg/query", "_trunc=-1&_limit=10&_skip=0&_sort={\"createtime\":-1}&_doc=", 1, 0, str);
+ret = "";//curl.post("http://192.168.35.115:3000/queryMsg/query", "_trunc=-1&_limit=10&_skip=0&_sort={\"createtime\":-1}&_doc=", 1, 0, str);
 
 var json = require('json');
 //解析json
 var parse =  json.parse(ret);
-if(parse.IsValid())
+if( ret != "" && parse.IsValid())
 {
 	//code -->string
 	if(parse.IsString("code"))
@@ -124,6 +108,8 @@ else
 {
 	console.log("invalid");
 }
+
+
 ///*******************************************
 
 //****************************************
@@ -136,9 +122,26 @@ log.print("写日誌類first write log file.", logname);
 log.close();*/
 
 file.trace("trace info. ..");
-file.info("info ....");
-file.debug(ret);
-file.error("error output...");
-file.warning("warining ...");
+//file.info("info ....");
+//file.debug(ret);
+//file.error("error output...");
+//file.warning("warining ...");
 
 
+//************************************
+function download_callback(p)
+{
+	console.log("sssssssssssssssssss");
+	file.trace("download_callback execute...");
+}
+
+
+//下载文件
+var download = curl.download();
+download.callback(download_callback);
+download.start("http://dlsw.baidu.com/sw-search-sp/soft/5d/23407/PEiD_V0.95.3146450382.exe", 
+	"./peid.exe");
+
+
+//************************************
+file.trace("***  end ***");
