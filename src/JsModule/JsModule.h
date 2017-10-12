@@ -35,6 +35,10 @@ public:
 
 	void V8_executeFile(const char* strFile);
 
+	void V8_executeFileFunction(const char* strFile, const char* szFuncName, const char *fmt, .../*const char* szParam*/);
+
+	v8::Isolate* GetIsolate();
+
  private:
  	v8pp::context*	m_context;
  	v8::Isolate*	m_isolate;

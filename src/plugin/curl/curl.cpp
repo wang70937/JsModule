@@ -108,9 +108,10 @@ size_t header_callback(const char  *ptr, size_t size, size_t nmemb, std::string 
 }
 
 
-int PostUrl(const char* szRefrence, const char* szUrl, const char* szPostData,
-	string& sRet, int& nLen, BOOL bPost /*= TRUE*/, BOOL bFirst /*= FALSE*/)
+string PostUrl(const char* szRefrence, const char* szUrl, const char* szPostData,
+	 BOOL bPost /*= TRUE*/, BOOL bFirst /*= FALSE*/)
 {
+	string sRet;
 	string sData;
 	CURL *curl;
 	CURLcode res;
@@ -126,7 +127,7 @@ int PostUrl(const char* szRefrence, const char* szUrl, const char* szPostData,
 		//		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);   //只需要设置一个秒的数量就可以  
 
 		//初始化cookie引擎
-		//curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
+		//curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "./log/cookie.txt");
 		res = curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
 		//http请求头
@@ -136,11 +137,11 @@ int PostUrl(const char* szRefrence, const char* szUrl, const char* szPostData,
 
 		if (bFirst)
 		{
-			res = curl_easy_setopt(curl, CURLOPT_COOKIEJAR, "cookie.txt");//把服务器发过来的cookie保存到cookie.txt
+			res = curl_easy_setopt(curl, CURLOPT_COOKIEJAR, "./log/cookie.txt");//把服务器发过来的cookie保存到cookie.txt
 		}
 		else
 		{
-			res = curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "cookie.txt");
+			res = curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "./log/cookie.txt");
 		}
 
 		//发送http请求头
@@ -169,7 +170,7 @@ int PostUrl(const char* szRefrence, const char* szUrl, const char* szPostData,
 		{
 			curl_easy_cleanup(curl);
 			curl_slist_free_all(headers);
-			return res;
+			return ""/*res*/;
 		}
 
 
@@ -177,7 +178,7 @@ int PostUrl(const char* szRefrence, const char* szUrl, const char* szPostData,
 		//wstring sOutput = (wstring)(_T("\r\n[post url]:")) + sTmp + (wstring)(_T("\r\n"));
 		OutputDebugString(sTmp.c_str());
 
-		nLen = content.length();
+//		nLen = content.length();
 		sRet = content;
 
 
@@ -187,7 +188,7 @@ int PostUrl(const char* szRefrence, const char* szUrl, const char* szPostData,
 		headers = NULL;
 	}
 
-	return res;
+	return sRet/*res*/;
 }
 
 
@@ -207,7 +208,7 @@ string post(v8::FunctionCallbackInfo<v8::Value> const& args)
 	//param 2
 	v8::String::Utf8Value strParam2(args[1]);
 	//param 5
-	v8::Handle<v8::Value> strParam5(args[4]);
+//	v8::Handle<v8::Value> strParam5(args[4]);
 
 	bool bPost = true;
 	bool bFirst = false;
@@ -227,18 +228,17 @@ string post(v8::FunctionCallbackInfo<v8::Value> const& args)
 	
 
 	/////////////////
-	string sRet;
-	int nLen = 0;
-	PostUrl(*strParam1, *strParam1, *strParam2, sRet, nLen, bPost, bFirst);
+	string sRet = PostUrl(*strParam1, *strParam1, *strParam2,  bPost, bFirst);
 
 	OutputDebugStringA(sRet.c_str());
 	//
 	string sUtf8;
+	int nLen = strlen(sRet.c_str());
 	Utf8ToMb((char*)sRet.c_str(), nLen, sUtf8);
 	int nLen2 = sUtf8.length();
 
 	/////////////////
-	strParam5 = v8pp::to_v8(args.GetIsolate(), sUtf8);
+//	strParam5 = v8pp::to_v8(args.GetIsolate(), sUtf8);
 
 	return sRet;
 }

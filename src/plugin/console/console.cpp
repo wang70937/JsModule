@@ -57,6 +57,15 @@ namespace console {
 		return true;
 	}
 
+	void cin(v8::FunctionCallbackInfo<v8::Value> const& args)
+	{
+		v8::HandleScope handle_scope(args.GetIsolate());
+
+		std::string line;
+		std::cin >> line;
+		args.GetReturnValue().Set(v8pp::to_v8(args.GetIsolate(), line));
+	}
+
 void log(v8::FunctionCallbackInfo<v8::Value> const& args)
 {
 	v8::HandleScope handle_scope(args.GetIsolate());
@@ -77,6 +86,7 @@ v8::Handle<v8::Value> init(v8::Isolate* isolate)
 {
 	v8pp::module m(isolate);
 	m.set("log", &log);
+	m.set("cin", &cin);
 	return m.new_instance();
 }
 

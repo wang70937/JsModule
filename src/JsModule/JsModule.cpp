@@ -5,8 +5,10 @@
 
 #include "JsModule.h"
 #include <iostream>
+#include <string>
 
 using namespace v8;
+using namespace std;
 
 CJsModule* CJsModule::s_pJsModule = NULL;
 
@@ -107,5 +109,117 @@ void CJsModule::V8_executeFile(const char* strFile)
 
 //	v8pp::context context;
 //	context.run_file(strFile);
+}
+
+void CJsModule::V8_executeFileFunction(const char* strFile, const char* szFuncName, const char *fmt, .../*const char* szParam*/)
+{
+	char pszDest[4096] = { 0 };
+	int DestLen = 4096;
+
+	va_list args;
+	va_start(args, fmt);
+	_vsnprintf_s(pszDest, 4096,  DestLen, fmt, args);
+	va_end(args);
+
+	/////////////
+	vector<string> vecParam;
+	string sTmp(pszDest);
+	while (sTmp.length() > 0)
+	{
+		int nPos = sTmp.find('|');
+		if (nPos == -1)
+		{
+			break;
+		}
+
+		if ( nPos > 1 )
+		{
+			string sParam = sTmp.substr(0, nPos);
+			vecParam.push_back(sParam);
+		}
+
+		sTmp = sTmp.substr(nPos + 1, sTmp.length() - nPos - 1);
+	}
+
+	if (!sTmp.empty())
+	{
+		vecParam.push_back(sTmp);
+	}
+
+	/////////////
+//	V8_executeFile(strFile);
+
+	HandleScope handle_scope(m_isolate);
+
+	Local<Context> context = m_isolate->GetCurrentContext();
+
+	// ¹ØÁªcontext
+	Context::Scope context_scope(context);
+
+	Local<Object> gObj = context->Global();
+	Local<Value> value = gObj->Get(String::NewFromUtf8(m_isolate, szFuncName, NewStringType::kNormal).ToLocalChecked());
+	if (!value.IsEmpty())
+	{
+		bool bObj = value->IsObject();
+		bool bString = value->IsString();
+		bool bName = value->IsName();
+		bool bUndefined = value->IsUndefined();
+		bool bNull = value->IsNull();
+		bool bSymbol = value->IsSymbol();
+		bool bExt = value->IsExternal();
+		if (value->IsFunction())
+		{
+			Local<Function> fun_execute = Local<Function>::Cast(value);
+
+			int nParamCount = (int)(vecParam.size());
+
+			switch (nParamCount)
+			{
+			case 1:
+			{
+				Local<Value> args[1];
+
+				vector<string>::iterator itVector = vecParam.begin();
+				for (int i = 0; itVector != vecParam.end(); ++itVector, ++i)
+				{
+					string& sItem = (*itVector);
+					Local<String> obj = String::NewFromUtf8(m_isolate, sItem.c_str(), NewStringType::kNormal).ToLocalChecked();
+					args[i] = obj;
+				}
+
+				fun_execute->Call(gObj, 1, args);
+			}
+				break;
+			case 2:
+			{
+				Local<Value> args[2];
+
+				vector<string>::iterator itVector = vecParam.begin();
+				for (int i = 0; itVector != vecParam.end(); ++itVector, ++i)
+				{
+					string& sItem = (*itVector);
+					Local<String> obj = String::NewFromUtf8(m_isolate, sItem.c_str(), NewStringType::kNormal).ToLocalChecked();
+					args[i] = obj;
+				}
+
+				fun_execute->Call(gObj, 2, args);
+			}
+				break;
+			case 0:
+			default:
+			{
+				Local<Value> args[1];
+				fun_execute->Call(gObj, 0, args);
+			}
+			break;
+				break;
+			}			
+		}
+	}
+}
+
+v8::Isolate* CJsModule::GetIsolate()
+{
+	return m_isolate;
 }
 

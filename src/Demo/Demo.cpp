@@ -5,6 +5,10 @@
 #include "JsModule.h"
 #include <string>
 #include <stdio.h>
+#include <iostream>
+
+using namespace std;
+using namespace v8;
 
 std::string ReadJsFileContent(std::string strFile)
 {
@@ -35,21 +39,21 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 
 	V8_init();
+
 	CJsModule js;
-	
-//	std::string str = ReadJsFileContent("console.js");
 
-//	js.V8_execute("var console = require('console');console.log('yo', 'baby', 4.2, null); ");
+	//login
+	js.V8_executeFile("login.js");
 
-//	js.V8_execute(str.c_str());
+//	std::string strInput;
+//	cin >> strInput;
 
-	js.V8_executeFile("console.js");
-
-//	js.V8_executeFile("file.js");
+	//login2
+//	js.V8_executeFileFunction("login.js", "captcha_check", "%s", strInput.c_str());
+//	js.V8_executeFileFunction("login.js", "login", "%s|%s", "wang70", "xxx");
 
 	V8_uninit();
 
-	getchar();
 	return 0;
 }
 
