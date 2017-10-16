@@ -34,15 +34,13 @@ static void v8_arg_count(v8::FunctionCallbackInfo<v8::Value> const& args)
 
 int CDownloadFile::ProgressCallback(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow)
 {
-	CDownloadFile* dd = (CDownloadFile*)clientp;
-
 	if (dltotal > -0.1 && dltotal < 0.1)
 	{
 		return 0;
 	}
 	int nPos = (int)((dlnow / dltotal) * 100);
 	//通知进度条更新下载进度  
-	std::cout << "dltotal: " << (long)dltotal << " ---- dlnow:" << (long)dlnow << "---- " << nPos <<"%" << std::endl;
+//	std::cout << "dltotal: " << (long)dltotal << " ---- dlnow:" << (long)dlnow << "---- " << nPos <<"%" << std::endl;
 
 //	if (*dd->m_bCancel)
 	{
@@ -50,25 +48,31 @@ int CDownloadFile::ProgressCallback(void *clientp, double dltotal, double dlnow,
 //		return -2;
 	}
 
-	v8::Isolate* isolate = dd->m_isolate;
-	v8::Handle<v8::Function> fun = v8::Function::New(isolate, v8_arg_count);
-	v8::Local<v8::String> funName = v8::String::NewFromUtf8(isolate, dd->m_strCallbackName.c_str(), v8::NewStringType::kNormal).ToLocalChecked();
-	fun->SetName(funName);
+	///////////////////////
+	CDownloadFile* dd = (CDownloadFile*)clientp;
+	if (dd)
+	{
+		v8::Isolate* isolate = dd->m_isolate;
+		v8::Local<v8::String> funName = v8::String::NewFromUtf8(isolate, dd->m_strCallbackName.c_str(), v8::NewStringType::kNormal).ToLocalChecked();
 
-	v8::String::Utf8Value vStrName(fun);
-	const char* strName = *vStrName;
+		v8::Local<v8::Context> context = isolate->GetCurrentContext();
+		v8::Context::Scope context_scope(context);
 
-	int nLineNo = fun->GetScriptLineNumber();
-	int nColNo = fun->GetScriptColumnNumber();
-	bool bBuiltin = fun->IsBuiltin();
-	int nId = fun->ScriptId();
-	v8::Local<v8::Value> va = fun->GetDisplayName();
-	v8::String::Utf8Value vStrName2(va);
-	const char* strName2 = *vStrName2;
-	
-	v8::Handle<v8::Value> vRet = v8pp::call_v8(isolate, fun, fun, nPos);
-	v8::Local<v8::Int32> n = vRet->ToInt32();
-	int nRet = n->Int32Value();
+		v8::Local<v8::Object> gObj = context->Global();
+		v8::Local<v8::Value> value = gObj->Get(funName);
+		v8::Local<v8::Function> fun_execute = v8::Local<v8::Function>::Cast(value);
+
+		//
+		v8::Local<v8::Value> args[2];
+
+		v8::Local<v8::Number> numNow = v8::Number::New(isolate, dlnow);
+		v8::Local<v8::Number> numTotal = v8::Number::New(isolate, dltotal);
+
+		args[0] = numNow;
+		args[1] = numTotal;
+		fun_execute->Call(gObj, 2, args);
+	}
+
 	return 0;
 }
 
@@ -102,14 +106,6 @@ int CDownloadFile::start(const char* szUrl, const char* szPath)
 		}
 
 		////////////////////////////////
-	/*	v8::Handle<v8::Function> fun = v8::Function::New(js_callback->GetIsolate(), v8_arg_count);
-		// invoke the callback to notify JS side as js_callback(error, result)
-		v8::Local<v8::Object> receiver = js_callback;
-		v8::Local<v8::Value> error = v8::Undefined(js_callback->GetIsolate());
-		v8::Local<v8::Object> result; // fill the connect result ...      
-		v8pp::call_v8(js_callback->GetIsolate(), js_callback, receiver, error, result);
-		////////////////////////////////
-*/
 		//初始化cookie引擎
 		//curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
 		res = curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
@@ -159,20 +155,8 @@ void CDownloadFile::setCallback(v8::Local<v8::Function> js_callback)
 	const char* strName = *vStrName;
 	m_strCallbackName = strName;
 
-	/*v8::Handle<v8::Function> fun = v8::Function::New(js_callback->GetIsolate(), v8_arg_count);
-	// invoke the callback to notify JS side as js_callback(error, result)
-	v8::Local<v8::Object> receiver = js_callback;
-	v8::Local<v8::Value> error = v8::Undefined(js_callback->GetIsolate());
-	v8::Local<v8::Object> result; // fill the connect result ...      
-	v8pp::call_v8(js_callback->GetIsolate(), js_callback, receiver, error, result);*/
 	m_isolate = js_callback->GetIsolate();
 
-	int nLineNo = js_callback->GetScriptLineNumber();
-	int nColNo = js_callback->GetScriptColumnNumber();
-	bool bBuiltin = js_callback->IsBuiltin();
-	int nId = js_callback->ScriptId();
-	v8::Local<v8::Value> va = js_callback->GetDebugName();
-	
 	return;
 }
 

@@ -129,18 +129,20 @@ file.trace("trace info. ..");
 
 
 //************************************
-function download_callback(p)
+function download_callback(dlnow, dltotal)
 {
-	console.log("sssssssssssssssssss");
-	file.trace("download_callback execute...");
+	var progress = dlnow / dltotal * 100;
+	console.log("speed is " + progress.toFixed(2) + "%");
+	//file.trace("speed is " + progress.toFixed(2) + "%");
+	//file.trace("download_callback ..." + speed + "%"  + dlnow + ", " + dltotal);
 }
 
 
 //下载文件
-var download = curl.download();
+var download =  curl.download();
 download.callback(download_callback);
-download.start("http://dlsw.baidu.com/sw-search-sp/soft/5d/23407/PEiD_V0.95.3146450382.exe", 
-	"./peid.exe");
+download.start("http://dldir1.qq.com/qqfile/qq/TIM1.2.0/21650/TIM1.2.0.exe", 
+	"./tim.exe");
 
 
 //************************************

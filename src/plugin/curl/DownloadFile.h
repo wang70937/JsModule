@@ -18,6 +18,7 @@ namespace curl{
 		v8::Isolate*	m_isolate;
 		string			m_strCallbackName;
 
+
 	public:
 		static int ProgressCallback(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow);
 		static size_t DownloadCallback(void* pBuffer, size_t nSize, size_t nMemByte, void* pParam);

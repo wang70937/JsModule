@@ -43,7 +43,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	CJsModule js;
 
 	//login
-	js.V8_executeFile("login.js");
+	js.V8_executeFile("console.js");
 
 //	std::string strInput;
 //	cin >> strInput;
