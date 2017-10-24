@@ -6,6 +6,7 @@
 #include <string>
 #include <stdio.h>
 #include <iostream>
+#include "plugin/socket/Common/Src/GeneralHelper.h"
 
 using namespace std;
 using namespace v8;
@@ -43,7 +44,15 @@ int _tmain(int argc, _TCHAR* argv[])
 	CJsModule js;
 
 	//login
-	js.V8_executeFile("console.js");
+	try
+	{
+		js.V8_executeFile("demo.js");
+	}
+	catch (std::exception& msg)
+	{
+		TRACE(msg.what());
+	}
+	//js.V8_executeFile("console.js");
 
 //	std::string strInput;
 //	cin >> strInput;

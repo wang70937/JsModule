@@ -122,7 +122,7 @@ string PostUrl(const char* szRefrence, const char* szUrl, const char* szPostData
 		res = curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 		res = curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
 
-		//curl_easy_setopt(curl, CURLOPT_ENCODING, "gzip, deflate");
+		curl_easy_setopt(curl, CURLOPT_ENCODING, "gzip, deflate, br");
 
 		//		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);   //只需要设置一个秒的数量就可以  
 
@@ -207,19 +207,19 @@ string post(v8::FunctionCallbackInfo<v8::Value> const& args)
 	v8::String::Utf8Value strParam1(args[0]);
 	//param 2
 	v8::String::Utf8Value strParam2(args[1]);
-	//param 5
-//	v8::Handle<v8::Value> strParam5(args[4]);
+	//param 3
+	v8::String::Utf8Value strParam3(args[2]);
 
 	bool bPost = true;
 	bool bFirst = false;
-	if (nArgsCount >= 3)
+	if (nArgsCount >= 4)
 	{
 		//param 3
 		v8::Local<v8::Value> bParam3(args[2]);
 		bPost = bParam3->BooleanValue();
 	}
 	
-	if (nArgsCount >= 4)
+	if (nArgsCount >= 5)
 	{
 		//param 4
 		v8::Local<v8::Value> bParam4(args[3]);
@@ -228,7 +228,7 @@ string post(v8::FunctionCallbackInfo<v8::Value> const& args)
 	
 
 	/////////////////
-	string sRet = PostUrl(*strParam1, *strParam1, *strParam2,  bPost, bFirst);
+	string sRet = PostUrl(*strParam1, *strParam2, *strParam3,  bPost, bFirst);
 
 	OutputDebugStringA(sRet.c_str());
 	//

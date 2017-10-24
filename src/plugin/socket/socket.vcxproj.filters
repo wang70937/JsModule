@@ -209,6 +209,9 @@
     <ClCompile Include="Global\helper.cpp">
       <Filter>Global</Filter>
     </ClCompile>
+    <ClCompile Include="JsTcpClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Src\bufferpool.h">
@@ -387,6 +390,9 @@
     </ClInclude>
     <ClInclude Include="Global\helper.h">
       <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="JsTcpClient.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

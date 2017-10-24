@@ -22,8 +22,27 @@ using namespace std;
 //#include "src/SSLServer.h"
 #include "src/SSLClient.h"
 
+#include "JsTcpClient.h"
+
 
 namespace hpsocket {
+
+	wstring AnsiToUnicode(string strA)
+	{
+		wstring strW;
+		if (strA.empty() || strA.size() < 1)
+		{
+			return _T("");
+		}
+		WCHAR *pwcString;
+
+		pwcString = new WCHAR[strA.size() + 1];
+		MultiByteToWideChar(CP_ACP, 0, strA.c_str(), -1, pwcString, strA.size() + 1);
+		strW = pwcString;
+		delete pwcString;
+
+		return strW;
+	}
 
 	bool Utf8ToMb(char* strStcText, int nLen, string &strDstText)
 	{
@@ -67,52 +86,31 @@ namespace hpsocket {
 		return true;
 	}
 
-	EnAppState enState = ST_STARTING;
+//	EnAppState enState = ST_STARTING;
 
-	class CCLientListener : public CTcpClientListener
-	{
-	public:
-		CCLientListener(){};
-		~CCLientListener(){};
+	
 
-		virtual EnHandleResult OnSend(ITcpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
-		{
-			return HR_OK;
-		}
-		virtual EnHandleResult OnReceive(ITcpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
-		{
-			return HR_OK;
-		}
-		virtual EnHandleResult OnClose(ITcpClient* pSender, CONNID dwConnID, EnSocketOperation enOperation, int iErrorCode)
-		{
-			enState = ST_STOPPED;
-			return HR_OK;
-		}
-		virtual EnHandleResult OnConnect(ITcpClient* pSender, CONNID dwConnID)
-		{
-			return HR_OK;
-		}
-		virtual EnHandleResult OnHandShake(ITcpClient* pSender, CONNID dwConnID)
-		{
-			enState = ST_STARTED;
-			std::string str = "asdfwer2342342342342wefrsdf";
-			pSender->Send((const BYTE*)str.c_str(), str.length());
-			return HR_OK;
-		}
-	};
+//	CCLientListener* g_pListener = new CCLientListener();
+//	CTcpClient g_client(g_pListener);
 
-	CCLientListener* g_pListener = new CCLientListener();
-	CSSLClient g_client(g_pListener);
+// 	void send(const char* p, int nLen)
+// 	{
+// 		int nLen2 = strlen(p);
+// 		g_client.Send((const BYTE*)p, nLen);
+// 	}
 
-	void send(const char* p)
-	{
-		int nLen = strlen(p);
-		g_client.Send((const BYTE*)p, nLen);
-	}
-
-	void start(v8::FunctionCallbackInfo<v8::Value> const& args)
+/*	void start(v8::FunctionCallbackInfo<v8::Value> const& args)
 	{
 		v8::HandleScope handle_scope(args.GetIsolate());
+
+		int nArgsCount = args.Length();
+
+		v8::String::Utf8Value strHost(args[0]);
+		v8::Local<v8::Value> vPort(args[1]);
+		std::string sHost = *strHost;
+
+		v8::Local<v8::Uint32> uPort = vPort->ToUint32();
+		uint32_t nPort = uPort->Value();
 
 		for (int i = 0; i < args.Length(); ++i)
 		{
@@ -126,25 +124,20 @@ namespace hpsocket {
 
 		/////////
 		
-		g_client.CleanupSSLContext();
-		g_client.SetupSSLContext(3, L"ssl-cert\\server.cer", L"ssl-cert\\server.key", L"123456", L"ssl-cert\\ca.crt");
+		//g_client.CleanupSSLContext();
+		//g_client.SetupSSLContext(3, L"ssl-cert\\server.cer", L"ssl-cert\\server.key", L"123456", L"ssl-cert\\ca.crt");
+		//g_client.SetupSSLContext();
 
-		g_client.Start(L"127.0.0.1", 5555);
+		wstring strIp = AnsiToUnicode(sHost);
+		g_client.Start(strIp.c_str(), nPort);
+		//g_client.Start(L"127.0.0.1", 5555);
 
 		std::cout << std::endl;
 	}
-
+*/
 v8::Handle<v8::Value> init(v8::Isolate* isolate)
 {
 	v8::EscapableHandleScope scope(isolate);
-
-	///////////////////
-	v8pp::class_<CCLientListener> CCLientListener_class(isolate);
-	CCLientListener_class
-		.ctor()
-		.inherit<CTcpClientListener>()
-		.set("OnSend", &CCLientListener::OnSend)
-		;
 
 	///////////////////
 // 	v8pp::class_<IClientListenerT> IClientListenerT_class(isolate);
@@ -155,7 +148,7 @@ v8::Handle<v8::Value> init(v8::Isolate* isolate)
 	///////////////////
 	v8pp::class_<ITcpClientListener> ITcpClientListener_class(isolate);
 	ITcpClientListener_class
-		.inherit<IClientListenerT<ITcpClient>>()
+		//.inherit<IClientListenerT<ITcpClient>>()
 		;
 
 	///////////////////
@@ -179,9 +172,9 @@ v8::Handle<v8::Value> init(v8::Isolate* isolate)
 	CTcpClient_class
 		.ctor<ITcpClientListener*>()
 		.inherit<ITcpClient>()
-		//.set("CleanupSSLContext", &CTcpClient::CleanupSSLContext)
-		//.set("SetupSSLContext", &CTcpClient::SetupSSLContext)
-		//.set("Start", &CTcpClient::Start)
+		.set("CleanupSSLContext", &CTcpClient::CleanupSSLContext)
+		.set("SetupSSLContext", &CTcpClient::SetupSSLContext)
+		.set("Start", &CTcpClient::Start)
 		;
 
 	///////////////////
@@ -194,16 +187,45 @@ v8::Handle<v8::Value> init(v8::Isolate* isolate)
 		.set("Start", &CSSLClient::Start)
 		;
 
+	///////////////////
+	v8pp::class_<CTcpClientListener> CTcpClientListener_class(isolate);
+	CTcpClientListener_class
+		.inherit<ITcpClientListener>()
+		;
+
+	///////////////////
+	v8pp::class_<CCLientListener> CCLientListener_class(isolate);
+	CCLientListener_class
+		.ctor()
+		.inherit<CTcpClientListener>()
+		//.set("OnSend", &CCLientListener::OnSend)
+		;
+
+	///////////////////
+	v8pp::class_<CJsTcpClient> CJsTcpClient_class(isolate);
+	CJsTcpClient_class
+		.ctor<CCLientListener*>()
+		//.set("Create", &CJsTcpClient::Create)
+		.set("Start", &CJsTcpClient::Start)
+		.set("Send", &CJsTcpClient::Send)
+		.set("SetCallbackOnSend", &CJsTcpClient::SetCallbackOnSend)
+		;
 
 	// Create a module to add classes and functions to and return a
 	// new instance of the module to be embedded into the v8 context
 	v8pp::module m(isolate);
+	m.set("itcpclient_listener", ITcpClientListener_class);
+ 	m.set("tcpclient_listener", CTcpClientListener_class);
 	m.set("client_listener", CCLientListener_class);
-	m.set("ssl_client", CSSLClient_class);
-	m.set("tcp_client", CTcpClient_class);
-	m.set("itcp_client", ITcpClient_class);
+ 	m.set("iclient", IClient_class);
+ 	m.set("ssl_client", CSSLClient_class);
+ 	m.set("tcp_client", CTcpClient_class);
+ 	m.set("itcp_client", ITcpClient_class);
+	m.set("jstcpclient", CJsTcpClient_class);
+//	m.set("start", start);
+//	m.set("send", send);
 
-//	return m.new_instance();
+
 	return scope.Escape(m.new_instance());
 }
 

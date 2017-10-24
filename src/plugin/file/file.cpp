@@ -14,10 +14,15 @@
 #include <string>
 using namespace std;
 
+#include "Directory.hpp"
+
 
 ///////////////
 //#define  ELPP_STL_LOGGING
+#ifndef ELPP_NO_DEFAULT_LOG_FILE
 #define ELPP_NO_DEFAULT_LOG_FILE
+#endif
+
 #define ELPP_DISABLE_LOG_FILE_FROM_ARG
 #include "easylogging++.h"
 
@@ -313,6 +318,8 @@ v8::Handle<v8::Value> init(v8::Isolate* isolate)
 	m.set("debug", &LogDebug);
 	m.set("error", &LogError);
 	m.set("warning", &LogWarning);
+	//
+	m.set("GetCurDir", &GetCurDir);
 
 	return scope.Escape(m.new_instance());
 }
@@ -330,11 +337,11 @@ V8PP_PLUGIN_INIT(v8::Isolate* isolate)
 
 	//el::Loggers::reconfigureAllLoggers(el::ConfigurationType::Format, "%datetime %level: %msg");
 
-	LOG(TRACE) << "***** trace log  *****";
-	LOG(DEBUG) << "***** debug log  *****";
-	LOG(ERROR) << "***** error log  *****";
-	LOG(WARNING) << "***** warning log  *****";
-	LOG(INFO) << "***** info log  *****";
+// 	LOG(TRACE) << "***** trace log  *****";
+// 	LOG(DEBUG) << "***** debug log  *****";
+// 	LOG(ERROR) << "***** error log  *****";
+// 	LOG(WARNING) << "***** warning log  *****";
+// 	LOG(INFO) << "***** info log  *****";
 
 	/*el::Logger* defaultLogger = el::Loggers::getLogger("default");
 

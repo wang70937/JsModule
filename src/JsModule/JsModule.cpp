@@ -72,11 +72,7 @@ T CJsModule::run_script(v8pp::context& context, std::string const& source)
 
 int CJsModule::V8_execute(const char* str)
 {
-//	v8pp::context context;
-//	v8::HandleScope scope(context.isolate());
-
 	v8::Local<Value> v = run_script<v8::Local<Value>>(*m_context, str);
- 
 	return 1;
 }
 
@@ -105,8 +101,9 @@ void CJsModule::V8_executeFile(const char* strFile)
 	delete[] p;
 	p = NULL;
 
+	
 	v8::Local<Value> a = run_script<v8::Local<Value>>(*m_context, strContent);
-
+	
 //	v8pp::context context;
 //	context.run_file(strFile);
 }

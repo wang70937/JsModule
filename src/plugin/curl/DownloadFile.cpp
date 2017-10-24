@@ -50,12 +50,13 @@ int CDownloadFile::ProgressCallback(void *clientp, double dltotal, double dlnow,
 
 	///////////////////////
 	CDownloadFile* dd = (CDownloadFile*)clientp;
-	if (dd)
+	if (dd && !dd->m_strCallbackName.empty())
 	{
 		v8::Isolate* isolate = dd->m_isolate;
-		v8::Local<v8::String> funName = v8::String::NewFromUtf8(isolate, dd->m_strCallbackName.c_str(), v8::NewStringType::kNormal).ToLocalChecked();
-
 		v8::Local<v8::Context> context = isolate->GetCurrentContext();
+
+		v8::Local<v8::String> funName = v8::String::NewFromUtf8(isolate, dd->m_strCallbackName.c_str(), v8::NewStringType::kNormal).ToLocalChecked();
+		
 		v8::Context::Scope context_scope(context);
 
 		v8::Local<v8::Object> gObj = context->Global();

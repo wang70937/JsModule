@@ -40,9 +40,8 @@
     <ClCompile Include="Common\Src\zlib\trees.c" />
     <ClCompile Include="Common\Src\zlib\uncompr.c" />
     <ClCompile Include="Common\Src\zlib\zutil.c" />
-    <ClCompile Include="Global\helper.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="Global\helper.cpp" />
+    <ClCompile Include="JsTcpClient.cpp" />
     <ClCompile Include="socket.cpp" />
     <ClCompile Include="src\HPSocket-SSL.cpp" />
     <ClCompile Include="src\HPSocket.cpp" />
@@ -101,9 +100,8 @@
     <ClInclude Include="Common\Src\zlib\zconf.h" />
     <ClInclude Include="Common\Src\zlib\zlib.h" />
     <ClInclude Include="Common\Src\zlib\zutil.h" />
-    <ClInclude Include="Global\helper.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="Global\helper.h" />
+    <ClInclude Include="JsTcpClient.h" />
     <ClInclude Include="src\HPSocket-SSL.h" />
     <ClInclude Include="src\HPSocket.h" />
     <ClInclude Include="src\HPTypeDef.h" />
@@ -190,6 +188,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)\lib\$(Configuration);.\Common\Lib\openssl\12.0\x86\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>v8ppD.lib;v8.lib;winmm.lib;libeay32.lib;ssleay32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
