@@ -360,7 +360,7 @@ namespace zip {
 		{
 			if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 			{
-				if (wfd.cFileName[0] != _T('.'))
+				if (_tcscmp(wfd.cFileName, _T(".")) != 0 && _tcscmp(wfd.cFileName, _T("..")) != 0)
 				{
 					//
 				}
