@@ -320,6 +320,9 @@ v8::Handle<v8::Value> init(v8::Isolate* isolate)
 	m.set("warning", &LogWarning);
 	//
 	m.set("GetCurDir", &GetCurDir);
+	m.set("CreateDir", &CreateDir);
+	m.set("DelDir", &DelDir);
+	m.set("DelFile", &DelFile);
 
 	return scope.Escape(m.new_instance());
 }

@@ -133,6 +133,16 @@ compress.CreateZipFileFromDir("dir.zip", 0, "log");
 //UncompressZip
 compress.UncompressZip("dir.zip", 0, "解压缩目录");
 
+//GetCurDir
+var vCurDir = file.GetCurDir();
+file.trace("curdir: " + vCurDir);
+//CreateDir
+file.CreateDir(".\\新建目录");
+//DelDir
+file.DelDir("解压缩目录");
+file.DelDir("新建目录");
+//DelFile
+file.DelFile("2017-09-29.log");
 
 //****************************************
 //            socket module

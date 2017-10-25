@@ -5,11 +5,42 @@
 
 #include <string>
 #include <shlwapi.h>
+#include <shlwapi.h>
+#include <tchar.h>
+#include <shlobj.h>
+#include "../../../../../vs2013-demos/JsModule/src/plugin/socket/Common/Src/GeneralHelper.h"
 using namespace std;
 
 #pragma comment(lib, "shlwapi.lib")
+#pragma comment(lib, "Shell32.lib")
 
 namespace file{
+	wstring UTF8ToUnicode(char* szSrc)
+	{
+		int  len = 0;
+		string str = szSrc;
+		len = str.length();
+		int  unicodeLen = ::MultiByteToWideChar(CP_UTF8,
+			0,
+			str.c_str(),
+			-1,
+			NULL,
+			0);
+		wchar_t *  pUnicode;
+		pUnicode = new  wchar_t[unicodeLen + 1];
+		memset(pUnicode, 0, (unicodeLen + 1)*sizeof(wchar_t));
+		::MultiByteToWideChar(CP_UTF8,
+			0,
+			str.c_str(),
+			-1,
+			(LPWSTR)pUnicode,
+			unicodeLen);
+		wstring  rt;
+		rt = (wchar_t*)pUnicode;
+		delete  pUnicode;
+
+		return  rt;
+	}
 
 	void Convert(const char* strIn, char* strOut, int sourceCodepage, int targetCodepage)
 	{
@@ -27,6 +58,60 @@ namespace file{
 		strcpy(strOut, (char*)pTargetData);
 		delete pUnicode;
 		delete pTargetData;
+	}
+
+	BOOL _DeleteDirectory(const TCHAR* sDirName)
+	{
+		TCHAR chDirFind[2 * MAX_PATH] = { 0 };
+		_stprintf_s(chDirFind, 2 * MAX_PATH, _T("%s\\*.*"), sDirName);
+
+		WIN32_FIND_DATA wfd;
+		HANDLE hFind = ::FindFirstFile(chDirFind, &wfd);
+		if (hFind == INVALID_HANDLE_VALUE)
+		{
+			return FALSE;
+		}
+
+		while (TRUE)
+		{
+			if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+			{
+				if (_tcscmp(wfd.cFileName, _T(".")) != 0 && _tcscmp(wfd.cFileName, _T("..")) != 0 )
+				{
+					TCHAR chSubDir[2 * MAX_PATH] = { 0 };
+					_stprintf_s(chSubDir, 2 * MAX_PATH, _T("%s\\%s"), sDirName, wfd.cFileName);
+					_DeleteDirectory(chSubDir);
+				}
+			}
+			else
+			{
+				TCHAR chFile[2 * MAX_PATH] = { 0 };
+				_stprintf_s(chFile, 2 * MAX_PATH, _T("%s\\%s"), sDirName, wfd.cFileName);
+
+				if (wfd.dwFileAttributes & FILE_ATTRIBUTE_READONLY)
+				{
+					DWORD dwRet = wfd.dwFileAttributes;
+					dwRet &= ~FILE_ATTRIBUTE_READONLY;
+					SetFileAttributes(chFile, dwRet);
+				}
+				
+				::DeleteFile(chFile);
+			}
+
+			if(!FindNextFile(hFind, &wfd))
+			{
+				break;
+			}
+		}
+
+		BOOL bRemove = ::RemoveDirectory(sDirName);
+		if (!bRemove)
+		{
+			DWORD dwErr = ::GetLastError();
+			return FALSE;
+		}
+
+		return TRUE;
 	}
 
 	///////////////////
@@ -51,5 +136,106 @@ namespace file{
 		return strPath;
 	}
 
+	///////////////////
+	//创建目录
+	///////////////////
+	void CreateDir(v8::FunctionCallbackInfo<v8::Value> const& args)
+	{
+		v8::String::Utf8Value str(args[0]);
+		string sTmp = *str;
+		wstring sDest = UTF8ToUnicode((char*)sTmp.c_str());
+
+		if (sDest.empty())
+		{
+			return;
+		}
+
+		//////////////
+		TCHAR chPath[2 * MAX_PATH] = { 0 };
+		GetModuleFileName(NULL, chPath, 2 * MAX_PATH);
+		PathRemoveFileSpec(chPath);
+		_tcscat_s(chPath, 2 * MAX_PATH, _T("\\"));
+
+		if (sDest[0] == _T('.') || sDest[0] == _T('\\'))
+		{
+			//相对路径
+			_tcscat_s(chPath, 2 * MAX_PATH, sDest.c_str());
+		}
+		else
+		{
+			//绝对路径
+			_stprintf_s(chPath, 2 * MAX_PATH, _T("%s"), sDest.c_str());
+		}
+
+		::SHCreateDirectory(NULL, chPath);
+	}
+
+	///////////////////
+	//删除目录
+	///////////////////
+	void DelDir(v8::FunctionCallbackInfo<v8::Value> const& args)
+	{
+		v8::String::Utf8Value str(args[0]);
+		string sTmp = *str;
+		wstring sDest = UTF8ToUnicode((char*)sTmp.c_str());
+
+		if (sDest.empty())
+		{
+			return;
+		}
+
+		//////////////
+		TCHAR chPath[2 * MAX_PATH] = { 0 };
+		GetModuleFileName(NULL, chPath, 2 * MAX_PATH);
+		PathRemoveFileSpec(chPath);
+		_tcscat_s(chPath, 2 * MAX_PATH, _T("\\"));
+
+		if (sDest[0] == _T('.') || sDest[0] == _T('\\'))
+		{
+			//相对路径
+			_tcscat_s(chPath, 2 * MAX_PATH, sDest.c_str());
+		}
+		else
+		{
+			//绝对路径
+			_stprintf_s(chPath, 2 * MAX_PATH, _T("%s%s"), chPath,  sDest.c_str());
+		}
+
+		_DeleteDirectory(chPath);
+	}
+
+	///////////////////
+	//删除文件
+	///////////////////
+	void DelFile(v8::FunctionCallbackInfo<v8::Value> const& args)
+	{
+		v8::String::Utf8Value str(args[0]);
+		string sTmp = *str;
+		wstring sDest = UTF8ToUnicode((char*)sTmp.c_str());
+
+		if (sDest.empty())
+		{
+			return;
+		}
+
+		//////////////
+		TCHAR chPath[2 * MAX_PATH] = { 0 };
+		GetModuleFileName(NULL, chPath, 2 * MAX_PATH);
+		PathRemoveFileSpec(chPath);
+		_tcscat_s(chPath, 2 * MAX_PATH, _T("\\"));
+
+		if (sDest[0] == _T('.') || sDest[0] == _T('\\'))
+		{
+			//相对路径
+			_tcscat_s(chPath, 2 * MAX_PATH, sDest.c_str());
+		}
+		else
+		{
+			//绝对路径
+			_stprintf_s(chPath, 2 * MAX_PATH, _T("%s"), sDest.c_str());
+		}
+
+		DeleteFile(chPath);
+	}
 
 };//namespace file
