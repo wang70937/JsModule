@@ -122,12 +122,9 @@ string PostUrl(const char* szRefrence, const char* szUrl, const char* szPostData
 		res = curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 		res = curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
 
-		curl_easy_setopt(curl, CURLOPT_ENCODING, "gzip, deflate, br");
-
 		//		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5);   //只需要设置一个秒的数量就可以  
 
 		//初始化cookie引擎
-		//curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "./log/cookie.txt");
 		res = curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
 		//http请求头
@@ -214,16 +211,16 @@ string post(v8::FunctionCallbackInfo<v8::Value> const& args)
 	bool bFirst = false;
 	if (nArgsCount >= 4)
 	{
-		//param 3
-		v8::Local<v8::Value> bParam3(args[2]);
-		bPost = bParam3->BooleanValue();
+		//param 4
+		v8::Local<v8::Value> bParam4(args[3]);
+		bPost = bParam4->BooleanValue();
 	}
 	
 	if (nArgsCount >= 5)
 	{
-		//param 4
-		v8::Local<v8::Value> bParam4(args[3]);
-		bFirst = bParam4->BooleanValue();
+		//param 5
+		v8::Local<v8::Value> bParam5(args[4]);
+		bFirst = bParam5->BooleanValue();
 	}
 	
 

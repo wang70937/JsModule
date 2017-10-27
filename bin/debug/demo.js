@@ -6,7 +6,7 @@ var json = require('json');
 var jstring = require('string');
 var socket = require('socket');
 var compress = require('compress');
-
+var damatu = require('damatu');
 
 
 
@@ -46,6 +46,7 @@ file.DelFile("2017-09-29.log");
 console.log("console log info. pls input a string...");
 //cin
 //var vInput = console.cin();
+
 
 
 
@@ -142,6 +143,13 @@ compress.CreateZipFileFromDir("dir.zip", 0, "log");
 compress.UncompressZip("dir.zip", 0, "解压缩目录");
 
 
+
+//****************************************
+//            damatu module
+//****************************************
+run("12306.js");
+
+
 //****************************************
 //            socket module
 //****************************************
@@ -169,4 +177,5 @@ compress.UncompressZip("dir.zip", 0, "解压缩目录");
 //****************************************
 //            other module
 //****************************************
-//console.cin();
+
+console.cin();

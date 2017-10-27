@@ -106,11 +106,51 @@ namespace jstring {
 	return sOut;
 }
 
+	void _replace(v8::FunctionCallbackInfo<v8::Value> const& args)
+	{
+		v8::HandleScope handle_scope(args.GetIsolate());
+
+		//src
+		v8::String::Utf8Value str1(args[0]);
+		std::string s1 = *str1;
+		std::string sOut1;
+		Utf8ToMb((char*)s1.c_str(), s1.length(), sOut1);
+
+		//old sub
+		v8::String::Utf8Value str2(args[1]);
+		std::string s2 = *str2;
+		std::string sOut2;
+		Utf8ToMb((char*)s2.c_str(), s2.length(), sOut2);
+
+		//new sub
+		v8::String::Utf8Value str3(args[2]);
+		std::string s3 = *str3;
+		std::string sOut3;
+		Utf8ToMb((char*)s3.c_str(), s3.length(), sOut3);
+
+		///////////
+		while (true)  
+		{
+			string::size_type   pos(0);
+			if ((pos = sOut1.find(sOut2)) != string::npos)
+				sOut1.replace(pos, sOut2.length(), sOut3);
+			else   
+				break;
+		}
+
+		//
+		char chRet[1024] = { 0 };
+		Convert(sOut1.c_str(), chRet, CP_ACP, CP_UTF8);
+
+		args.GetReturnValue().Set(v8pp::to_v8(args.GetIsolate(), chRet));
+	}
+
 v8::Handle<v8::Value> init(v8::Isolate* isolate)
 {
 	v8pp::module m(isolate);
 	m.set("Utf8ToAnsi", &Utf8ToAnsi);
 	m.set("AnsiToUtf8", &AnsiToUtf8);
+	m.set("replace", &_replace);
 	return m.new_instance();
 }
 
