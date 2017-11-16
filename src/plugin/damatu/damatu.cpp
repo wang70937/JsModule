@@ -327,7 +327,7 @@ void _d2file(v8::FunctionCallbackInfo<v8::Value> const& args)
 	/////////////////
 	char chVCodeText[4096] = { 0 };
 
-	int nRet = ::D2File(chValue1, chValue2, chValue3, chValue4, nTimeout, nVCodeTypeID, chVCodeText);
+	int nRet = ::D2File(chValue1, chValue2, chValue3, chValue4, nTimeout, nVCodeTypeID , chVCodeText);
 	args.GetReturnValue().Set(nRet);
 }
 
