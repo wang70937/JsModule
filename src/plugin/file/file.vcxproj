@@ -46,7 +46,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include;$(SolutionDir)\src\plugin\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;CONSOLE_EXPORTS;%(PreprocessorDefinitions);ELPP_NO_DEFAULT_LOG_FILE</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -58,7 +58,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include;$(SolutionDir)\src\plugin\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;CONSOLE_EXPORTS;%(PreprocessorDefinitions);ELPP_NO_DEFAULT_LOG_FILE</PreprocessorDefinitions>
     </ClCompile>
     <Link>

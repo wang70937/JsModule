@@ -25,6 +25,7 @@ using namespace std;
 
 #define ELPP_DISABLE_LOG_FILE_FROM_ARG
 #include "easylogging++.h"
+#include "StringConvert.hpp"
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -173,7 +174,135 @@ namespace file {
 	}
 
 	//////////////////////////
+	void replace_file_by_row(v8::FunctionCallbackInfo<v8::Value> const& args)
+	{
+		v8::HandleScope scope(args.GetIsolate());
 
+		string strFile = utf8Value2Mb(args[0]);
+		string strOld = utf8Value2Mb(args[1]);
+		string strNew = utf8Value2Mb(args[2]);
+
+		//////////////
+		FILE* ff = NULL;
+		errno_t err = fopen_s(&ff, strFile.c_str(), "rb");
+		if (err)
+		{
+			args.GetReturnValue().Set(Undefined(args.GetIsolate()));
+		}
+
+		fseek(ff, 0, SEEK_END);
+		int nLen = ftell(ff);
+		fseek(ff, 0, SEEK_SET);
+
+		string sContent;
+		char* p = new char[nLen + 1];
+		if (p)
+		{
+			memset(p, 0, nLen + 1);
+
+			fread_s(p, nLen + 1, 1, nLen, ff);
+		}
+
+		sContent = string(p + 2, nLen - 1);
+
+		delete[] p;
+		fclose(ff);
+
+		////////////////////
+		wstring str = (TCHAR*)sContent.c_str();
+
+		wstring sReplaceOld = utf8ToUnicode((char*)strOld.c_str());
+		wstring sReplaceNew = utf8ToUnicode((char*)strNew.c_str());
+		
+		while (true)
+		{
+			string::size_type   pos(0);
+			if ((pos = str.find(sReplaceOld.c_str())) != string::npos)
+				str.replace(pos, sReplaceOld.length(), sReplaceNew.c_str());
+			else
+				break;
+		}
+
+		////////////////////
+		FILE* file = NULL;
+		errno_t err2 = fopen_s(&file, strFile.c_str(), "wb");
+		if (err2)
+		{
+			return;
+		}
+
+		char chBom[2] = { 0xff, 0xfe };
+		fwrite(chBom, 2, 1, file);
+		fwrite(str.c_str(), 2*str.length(), 1, file);
+		fclose(file);
+
+		return;
+	}
+
+	void copyfile(v8::FunctionCallbackInfo<v8::Value> const& args)
+	{
+		v8::HandleScope scope(args.GetIsolate());
+
+		string strOldFile = utf8Value2Mb(args[0]);
+		string strNewFile = utf8Value2Mb(args[1]);
+
+		BOOL bRet = CopyFileA(strOldFile.c_str(), strNewFile.c_str(), FALSE);
+
+		args.GetReturnValue().Set(bRet);
+	}
+
+	void writefile(v8::FunctionCallbackInfo<v8::Value> const& args)
+	{
+		v8::HandleScope scope(args.GetIsolate());
+
+		string strFile = utf8Value2Mb(args[0]);
+		string strContent = utf8Value2Mb(args[1]);
+
+		FILE* ff = NULL;
+		errno_t err = fopen_s(&ff, strFile.c_str(), "wb");
+		if (err)
+		{
+			return;
+		}
+
+		fwrite(strContent.c_str(), strlen(strContent.c_str()), 1, ff);
+		fclose(ff);
+	}
+
+	void readfilecontent(v8::FunctionCallbackInfo<v8::Value> const& args)
+	{
+		v8::HandleScope scope(args.GetIsolate());
+
+		string strFile = utf8Value2Mb(args[0]);
+
+		FILE* ff = NULL;
+		errno_t err = fopen_s(&ff, strFile.c_str(), "rb");
+		if (err)
+		{
+			args.GetReturnValue().Set(Undefined(args.GetIsolate()));
+		}
+
+		fseek(ff, 0, SEEK_END);
+		int nLen = ftell(ff);
+		fseek(ff, 0, SEEK_SET);
+
+		string sRet;
+		char* p = new char[nLen + 1];
+		if (p)
+		{
+			memset(p, 0, nLen + 1);
+
+			fread_s(p, nLen + 1, 1, nLen, ff);
+		}
+
+		sRet = string(p+2, nLen - 1);
+
+		delete[] p;
+		fclose(ff);
+
+		///////////////
+		args.GetReturnValue().Set(v8pp::to_v8(args.GetIsolate(), sRet));
+	}
 	
 
 class file_base
@@ -323,6 +452,11 @@ v8::Handle<v8::Value> init(v8::Isolate* isolate)
 	m.set("CreateDir", &CreateDir);
 	m.set("DelDir", &DelDir);
 	m.set("DelFile", &DelFile);
+
+	m.set("readfilecontent", &readfilecontent);
+	m.set("writefile", &writefile);
+	m.set("copyfile", &copyfile);
+	m.set("replace_file_by_row", &replace_file_by_row);
 
 	return scope.Escape(m.new_instance());
 }

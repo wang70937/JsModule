@@ -1,0 +1,30 @@
+#pragma once
+
+#include <string>
+#include "v8.h"
+using namespace std;
+
+
+namespace common{
+	class CPips
+	{
+	public:
+		explicit CPips();
+		~CPips();
+	private:
+		bool *m_bCancel;
+
+		v8::Local<v8::Function> m_js_callback;
+		v8::Isolate*	m_isolate;
+		string			m_strCallbackName;
+
+
+	public:
+		static int PipsCallback(void *clientp, const char* szContent);
+		//static size_t DownloadCallback(void* pBuffer, size_t nSize, size_t nMemByte, void* pParam);
+		int start(const char* szParam1, const char* szParam2);
+
+		void setCallback(v8::Local<v8::Function> js_callback);
+	};
+
+};

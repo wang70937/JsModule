@@ -179,7 +179,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SOCKET_EXPORTS;_SSL_SUPPORT;_CRT_SECURE_NO_WARNINGS;_WINSOCK_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include;.;.\Common\Lib\openssl\12.0\x86\include;$(VC_IncludePath;$(WindowsSDK_IncludePath)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include;.;.\Common\Lib\openssl\12.0\x86\include;$(VC_IncludePath;$(WindowsSDK_IncludePath);$(SolutionDir)\src\plugin\include</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4100;4127;4510;4610;4996</DisableSpecificWarnings>
       <AdditionalOptions>/wd4430 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
