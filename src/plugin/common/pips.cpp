@@ -68,7 +68,7 @@ namespace common{
 		return strOut;
 	}
 
-	int CPips::PipsCallback(void *clientp, const char* szContent)
+	int CPips::PipsCallback(void *clientp, bool bFinished, const char* szContent)
 	{
 		///////////////////////
 		CPips* dd = (CPips*)clientp;
@@ -86,21 +86,23 @@ namespace common{
 			v8::Local<v8::Function> fun_execute = v8::Local<v8::Function>::Cast(value);
 
 			//
-			v8::Local<v8::Value> args[1];
+			v8::Local<v8::Value> args[2];
 			
 			string strUtf8 = MbToUtf8(szContent);
 
+			v8::Local<v8::Boolean> finished = v8::Boolean::New(isolate, bFinished);
 			v8::Local<v8::String> str = v8::String::NewFromUtf8(isolate, strUtf8.c_str(), v8::NewStringType::kNormal).ToLocalChecked();
 
-			args[0] = str;
-			fun_execute->Call(gObj, 1, args);
+			args[0] = finished;
+			args[1] = str;
+			fun_execute->Call(gObj, 2, args);
 		}
 
 		return 0;
 	}
 
 
-	int CPips::start(const char* szParam1, const char* szParam2)
+	int CPips::start(const char* szParam)
 	{
 		/////////////
 		SECURITY_ATTRIBUTES sa;//创建一个安全属性的变量
@@ -125,11 +127,11 @@ namespace common{
 		si.dwFlags = STARTF_USESHOWWINDOW | STARTF_USESTDHANDLES;
 
 		//////////////////////
-		string strParam1 = Utf8ToMb(szParam1);
-		string strParam2 = Utf8ToMb(szParam2);
+		string strParam = Utf8ToMb(szParam);
 
 		char cmdline[200] = { 0 };
-		sprintf(cmdline, "cmd /C %s %s", strParam1.c_str(), strParam2.c_str());
+		//sprintf(cmdline, "cmd /C %s", strParam.c_str());
+		sprintf(cmdline, "%s", strParam.c_str());
 
 		if (!CreateProcessA(NULL, cmdline, NULL, NULL, TRUE, NULL, NULL, NULL, &si, &pi))  //创建子进程
 		{
@@ -137,22 +139,43 @@ namespace common{
 		}
 		CloseHandle(hWrite);  //关闭管道句柄
 
+		//WaitForSingleObject(pi.hProcess, INFINITE);
+
 		char buffer[4096] = { 0 };
 		DWORD bytesRead;
 
+		DWORD dwRealRead = 0;
+		DWORD dwTotalBytesAvail = 0;
+
 		while (true)
 		{
-			if (ReadFile(hRead, buffer, 4095, &bytesRead, NULL) == NULL)  //读取管道内容到buffer中  
+			memset(buffer, 0, sizeof(buffer));
+			if (!PeekNamedPipe(hRead, buffer, 4095, &dwRealRead, &dwTotalBytesAvail, NULL))
+			{
+				break;
+			}
+
+			if (dwRealRead <= 0)
+			{
+				continue;;
+			}
+
+			memset(buffer, 0, sizeof(buffer));
+			if (ReadFile(hRead, buffer, 4095, &bytesRead, NULL) == FALSE)  //读取管道内容到buffer中  
 				break;
 
 			OutputDebugStringA(buffer);
-			OutputDebugStringA("\r\n");
 
 			
-			PipsCallback(this, buffer);
+			PipsCallback(this, false, buffer);
 
 		}
+
+		PipsCallback(this, true, "");
+
 		CloseHandle(hRead); //关闭读取句柄
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
 
 		return 0;
 	}

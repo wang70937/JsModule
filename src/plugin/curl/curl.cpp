@@ -13,6 +13,7 @@
 
 #include "DownloadFile.h"
 #include "v8pp/class.hpp"
+#include "ftp.h"
 
 
 namespace curl {
@@ -253,9 +254,21 @@ v8::Handle<v8::Value> init(v8::Isolate* isolate)
 		;
 
 	//
+	v8pp::class_<CFtp> CFtp_class(isolate);
+	CFtp_class
+		.ctor()
+		.set("startDownload", &CFtp::startDownload)
+		.set("callbackDownload", &CFtp::setCallbackDownload)
+		.set("startUpload", &CFtp::startUpload)
+		.set("callbackUpload", &CFtp::setCallbackUpload)
+		.set("callbackResult", &CFtp::SetCallbackResult)
+		;
+
+	//
 	v8pp::module m(isolate);
 	m.set("post", &post);
 	m.set("download", CDownloadFile_class);
+	m.set("ftp", CFtp_class);
 
 	//return m.new_instance();
 	return scope.Escape(m.new_instance());

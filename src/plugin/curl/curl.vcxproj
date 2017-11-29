@@ -55,7 +55,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include;.;$(SolutionDir)\src\plugin\include;</AdditionalIncludeDirectories>
     </ClCompile>
@@ -91,9 +91,11 @@
   <ItemGroup>
     <ClCompile Include="curl.cpp" />
     <ClCompile Include="DownloadFile.cpp" />
+    <ClCompile Include="ftp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DownloadFile.h" />
+    <ClInclude Include="ftp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

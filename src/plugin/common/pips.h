@@ -20,9 +20,9 @@ namespace common{
 
 
 	public:
-		static int PipsCallback(void *clientp, const char* szContent);
+		static int PipsCallback(void *clientp, bool bFinished, const char* szContent);
 		//static size_t DownloadCallback(void* pBuffer, size_t nSize, size_t nMemByte, void* pParam);
-		int start(const char* szParam1, const char* szParam2);
+		int start(const char* szParam);
 
 		void setCallback(v8::Local<v8::Function> js_callback);
 	};
