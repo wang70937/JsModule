@@ -41,6 +41,8 @@ namespace json {
 		bool IsValid()
 		{
 			v8::Handle<v8::Value> v = v8pp::json_parse(m_isolate, m_str);
+			if (v.IsEmpty())
+				return false;
 			bool bObj = v->IsObject();
 // 			if (bObj)
 // 			{
