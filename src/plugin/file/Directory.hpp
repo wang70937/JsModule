@@ -8,7 +8,7 @@
 #include <shlwapi.h>
 #include <tchar.h>
 #include <shlobj.h>
-#include "../../../../../vs2013-demos/JsModule/src/plugin/socket/Common/Src/GeneralHelper.h"
+#include "../../plugin/socket/Common/Src/GeneralHelper.h"
 using namespace std;
 
 #pragma comment(lib, "shlwapi.lib")

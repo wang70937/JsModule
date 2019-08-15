@@ -32,7 +32,7 @@ CJsModule* CJsModule::GetInstance()
 // 	}
 // 
 // 	return s_pJsModule;
-	CJsModule js;
+	static CJsModule js;
 	return &js;
 }
 
